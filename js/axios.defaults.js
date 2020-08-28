@@ -1,5 +1,7 @@
-
-axios.defaults.baseURL = "http://localhost:8888";
+//配置路由
+axios.defaults.baseURL = "http://127.0.0.1:8888";
+//配置cokei
+axios.defaults.withCredentials = true;
 //数据以表单的格式提交
 axios.defaults.headers['Content-Type']='application/x-www-form-urlencoded';
 
@@ -14,7 +16,7 @@ axios.defaults.transformRequest = function(data){
     return result.substring(1)
 }
 
-//配置相应拦截器
+//配置响应拦截器
 axios.interceptors.response.use(response=>{
     return response.data;
 },reason=>{
