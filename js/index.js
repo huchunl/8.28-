@@ -4,6 +4,7 @@ $(function(){
     $plan.add((power)=>{//订阅 "userhandle|departhandle|jobhandle|customerall"
            console.log(power)
            let str = ``;
+           //默认显示客户管理
            if(power.includes("customerall")){
             str +=`
              <div class="itemBox" text="客户管理">
@@ -17,6 +18,7 @@ $(function(){
              `
             }
             $('.menuBox').html(str)
+
            $("#zuzhi").click(function(){
                str=``;
               
@@ -54,12 +56,10 @@ $(function(){
                  </div>
                  `
              }
-            // else{
-            //      alert('没有访问权限!2');
-            //      return
-            //  }
              $('.menuBox').html(str)
+             //判断用户是否有权限
              let text = $(this).html().trim();
+             //意思是点击了但是power中没有这个权限
              if((text === "客户管理") && !/customerall/.test(power) || (text ==="组织结构") && !/(userhandle|departhandle|jobhandle)/.test(power)){
                   alert('没有访问权限!');
                 return
