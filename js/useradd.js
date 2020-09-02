@@ -1,11 +1,43 @@
 $(function(){
 
+    //获取编辑部分传递过来的id
+    let userId = null;
+    let params = window.location.href.queryURLParams();//utils中的接收页面传递参数的方法
+    // alert(params)
+    // console.log(params)
+    if(params.hasOwnProperty("id")){
+        userId = params.id
+        //实现数据回显
+        getBaseInfo()
+    }
+    //数据回显
+   async  function  getBaseInfo(){
+        let result = await axios.get("/user/info",{
+            params:{userId}
+        })
+        console.log(result)
+        if(result.code ===0){
+            result=result.data;
+            $('.username').val(result.name);
+            result.sex == 0 ? $("#man").prop('checked',true) :$("#woman").prop('checked',true)
+            $('.useremail').val(result.email);
+            $('.userphone').val(result.phone);
+            $('.userdepartement').val(result.departmentId);
+            $('userjob').val(result.jobId);
+            $('.userdesc').val(result.desc);
+            return;
+        }
+        alert('网络不好稍后再试');
+        userId =null;//没有显示成功,就清空userId然后继续执行
+
+    }
+
     initDepAndJob();
    async function initDepAndJob(){
     let departmentData = await queryDepart();
     let jobData = await queryJob();
-    console.log(departmentData);
-    console.log(jobData)
+    // console.log(departmentData);
+    // console.log(jobData)
 
     if(departmentData.code === 0){
         departmentData=departmentData.data;
@@ -95,6 +127,21 @@ $(function(){
             desc:$('.userdesc').val().trim()
         }
         // console.log(params)
+
+        //判断是编辑还是新增
+        if(userId){
+            //编辑
+            params.userId = userId
+            let result = await axios.post('/user/update',params)
+            if(result.code ===0){
+                alert('修改员工成功')
+                window.location.href = 'userlist.html'
+                return
+            }
+            alert('网络不好稍后再试')
+            return
+        }
+        //实现新增
         let result = await axios.post('/user/add',params)
         if(result.code ===0){
             alert('添加员工成功')
